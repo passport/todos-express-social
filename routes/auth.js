@@ -1,6 +1,7 @@
 var express = require('express');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20');
+var FacebookStrategy = require('passport-facebook');
 var db = require('../db');
 
 
@@ -16,7 +17,18 @@ function createStrategy(provider) {
     function(accessToken, refreshToken, profile, cb) {
       return cb(null, profile);
     });
+    
+  case 'www.facebook.com':
+    return new FacebookStrategy({
+      clientID: process.env['FACEBOOK_CLIENT_ID'],
+      clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
+      callbackURL: '/oauth2/redirect/www.facebook.com'
+    },
+    function(accessToken, refreshToken, profile, cb) {
+      return cb(null, profile);
+    });
   }
+  
 }
 
 
