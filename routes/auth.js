@@ -2,6 +2,7 @@ var express = require('express');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20');
 var FacebookStrategy = require('passport-facebook');
+var TwitterStrategy = require('passport-twitter');
 var db = require('../db');
 
 
@@ -25,6 +26,16 @@ function createStrategy(provider) {
       callbackURL: '/oauth2/redirect/www.facebook.com'
     },
     function(accessToken, refreshToken, profile, cb) {
+      return cb(null, profile);
+    });
+    
+  case 'twitter.com':
+    return new TwitterStrategy({
+      consumerKey: process.env['TWITTER_CONSUMER_KEY'],
+      consumerSecret: process.env['TWITTER_CONSUMER_SECRET'],
+      callbackURL: '/oauth/callback/twitter.com'
+    },
+    function(token, tokenSecret, profile, cb) {
       return cb(null, profile);
     });
   }
@@ -93,6 +104,13 @@ router.get('/login/federated/:provider',
   });
 
 router.get('/oauth2/redirect/:provider',
+  function(req, res, next) {
+    var strategy = createStrategy(req.params.provider);
+    passport.authenticate(strategy, { assignProperty: 'federatedUser', failureRedirect: '/login' })(req, res, next);
+  },
+  singleSignOn);
+  
+router.get('/oauth/callback/:provider',
   function(req, res, next) {
     var strategy = createStrategy(req.params.provider);
     passport.authenticate(strategy, { assignProperty: 'federatedUser', failureRedirect: '/login' })(req, res, next);
