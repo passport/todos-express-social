@@ -1,6 +1,24 @@
 var express = require('express');
 var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth20');
 var db = require('../db');
+
+
+function createStrategy(provider) {
+  switch (provider) {
+  case 'accounts.google.com':
+    return new GoogleStrategy({
+      clientID: process.env['GOOGLE_CLIENT_ID'],
+      clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
+      callbackURL: '/oauth2/redirect/accounts.google.com',
+      scope: [ 'profile' ]
+    },
+    function(accessToken, refreshToken, profile, cb) {
+      return cb(null, profile);
+    });
+  }
+}
+
 
 var router = express.Router();
 
@@ -8,13 +26,20 @@ router.get('/login', function(req, res, next) {
   res.render('login');
 });
 
-router.get('/login/federated/accounts.google.com', passport.authenticate('google'));
+router.get('/login/federated/:provider',
+  function(req, res, next) {
+    var strategy = createStrategy(req.params.provider);
+    passport.authenticate(strategy)(req, res, next);
+  });
 
-router.get('/oauth2/redirect/accounts.google.com',
-  passport.authenticate('google', { assignProperty: 'federatedUser', failureRedirect: '/login' }),
+router.get('/oauth2/redirect/:provider',
+  function(req, res, next) {
+    var strategy = createStrategy(req.params.provider);
+    passport.authenticate(strategy, { assignProperty: 'federatedUser', failureRedirect: '/login' })(req, res, next);
+  },
   function(req, res, next) {
     db.get('SELECT * FROM federated_credentials WHERE provider = ? AND subject = ?', [
-      'https://accounts.google.com',
+      'https://' + req.params.provider,
       req.federatedUser.id
     ], function(err, row) {
       if (err) { return next(err); }
@@ -26,7 +51,7 @@ router.get('/oauth2/redirect/accounts.google.com',
           
           var id = this.lastID;
           db.run('INSERT INTO federated_credentials (provider, subject, user_id) VALUES (?, ?, ?)', [
-            'https://accounts.google.com',
+            'https://' + req.params.provider,
             req.federatedUser.id,
             id
           ], function(err) {
