@@ -5,9 +5,11 @@ var db = require('../db');
 
 
 function singleSignOn(req, res, next) {
-  console.log('SSO!!!');
-  //console.log(req.federatedUser);
-  console.log(req.authInfo);
+  // TODO: need to set at req.federatedAuthInfo;
+  var state = req.authInfo.state || {};
+  var action = state.action || 'login';
+  
+  if (action !== 'login') { return next(); }
   
   db.get('SELECT * FROM federated_credentials WHERE provider = ? AND subject = ?', [
     'https://' + req.params.provider,
@@ -56,6 +58,31 @@ function singleSignOn(req, res, next) {
   });
 }
 
+function accountLink(req, res, next) {
+  console.log('ACCOUNT LINK!');
+  console.log(req.user);
+  console.log(req.federatedUser);
+  console.log(req.authInfo);
+  
+  
+  // TODO: need to set at req.federatedAuthInfo;
+  var state = req.authInfo.state || {};
+  var action = state.action;
+  
+  if (action !== 'link') { return next(); }
+  
+  // TODO: Check that state user is req user.
+  
+  db.run('INSERT INTO federated_credentials (provider, subject, user_id) VALUES (?, ?, ?)', [
+    'https://' + req.params.provider,
+    req.federatedUser.id,
+    req.user.id
+  ], function(err) {
+    if (err) { return next(err); }
+    res.redirect(state.returnTo || '/');
+  });
+}
+
 
 var router = express.Router();
 
@@ -74,7 +101,8 @@ router.get('/oauth2/redirect/:provider',
     var strategy = idp.create(req.params.provider);
     passport.authenticate(strategy, { assignProperty: 'federatedUser', failureRedirect: '/login' })(req, res, next);
   },
-  singleSignOn);
+  singleSignOn,
+  accountLink);
   
 router.get('/oauth/callback/:provider',
   function(req, res, next) {
