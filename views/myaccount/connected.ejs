@@ -38,6 +38,7 @@ main .grid > * {
 
         <form action="/myaccount/link" method="post">
           <input type="hidden" name="provider" value="accounts.google.com">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button type="submit" class="contrast">Connect to Google</button>
         </form>
 
