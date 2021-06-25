@@ -30,29 +30,18 @@ main .grid > * {
   </head>
 
   <body>
-    <%- include('header'); -%>
+    <%- include('../header'); -%>
 
     <main class="container">
 
       <div class="grid">
 
-        <figure>
-          <img src="/images/woman.png" width="128" height="128"/>
-        </figure>
+        <form action="/myaccount/link" method="post">
+          <input type="hidden" name="provider" value="accounts.google.com">
+          <button type="submit" class="contrast">Connect to Google</button>
+        </form>
 
-        <div>
-          <hgroup>
-            <h4><%= user.displayName %></h4>
-            <p><small><%= user.username %></small></p>
-          </hgroup>
-            
-          <% if (user.emails) { %>
-          <p><small>Email: </small><%= user.emails[0].value %></p>
-          <% } %>
-        </div>
-        
-        <a href="/myaccount/connected">Connected Accounts</a><br/>
-        
+        <!--<a href="/login/federated/accounts.google.com?action=link" role="button">Connect to Google</a><br/>-->
 
       </div>
     </main>

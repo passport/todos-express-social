@@ -1,48 +1,14 @@
 var express = require('express');
 var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth20');
-var FacebookStrategy = require('passport-facebook');
-var TwitterStrategy = require('passport-twitter');
+var idp = require('../lib/idp');
 var db = require('../db');
 
 
-function createStrategy(provider) {
-  switch (provider) {
-  case 'accounts.google.com':
-    return new GoogleStrategy({
-      clientID: process.env['GOOGLE_CLIENT_ID'],
-      clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
-      callbackURL: '/oauth2/redirect/accounts.google.com',
-      scope: [ 'profile' ]
-    },
-    function(accessToken, refreshToken, profile, cb) {
-      return cb(null, profile);
-    });
-    
-  case 'www.facebook.com':
-    return new FacebookStrategy({
-      clientID: process.env['FACEBOOK_CLIENT_ID'],
-      clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
-      callbackURL: '/oauth2/redirect/www.facebook.com'
-    },
-    function(accessToken, refreshToken, profile, cb) {
-      return cb(null, profile);
-    });
-    
-  case 'twitter.com':
-    return new TwitterStrategy({
-      consumerKey: process.env['TWITTER_CONSUMER_KEY'],
-      consumerSecret: process.env['TWITTER_CONSUMER_SECRET'],
-      callbackURL: '/oauth/callback/twitter.com'
-    },
-    function(token, tokenSecret, profile, cb) {
-      return cb(null, profile);
-    });
-  }
-  
-}
-
 function singleSignOn(req, res, next) {
+  console.log('SSO!!!');
+  //console.log(req.federatedUser);
+  console.log(req.authInfo);
+  
   db.get('SELECT * FROM federated_credentials WHERE provider = ? AND subject = ?', [
     'https://' + req.params.provider,
     req.federatedUser.id
@@ -99,20 +65,20 @@ router.get('/login', function(req, res, next) {
 
 router.get('/login/federated/:provider',
   function(req, res, next) {
-    var strategy = createStrategy(req.params.provider);
+    var strategy = idp.create(req.params.provider);
     passport.authenticate(strategy)(req, res, next);
   });
 
 router.get('/oauth2/redirect/:provider',
   function(req, res, next) {
-    var strategy = createStrategy(req.params.provider);
+    var strategy = idp.create(req.params.provider);
     passport.authenticate(strategy, { assignProperty: 'federatedUser', failureRedirect: '/login' })(req, res, next);
   },
   singleSignOn);
   
 router.get('/oauth/callback/:provider',
   function(req, res, next) {
-    var strategy = createStrategy(req.params.provider);
+    var strategy = idp.create(req.params.provider);
     passport.authenticate(strategy, { assignProperty: 'federatedUser', failureRedirect: '/login' })(req, res, next);
   },
   singleSignOn);
