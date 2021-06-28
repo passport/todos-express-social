@@ -34,13 +34,43 @@ main .grid > * {
 
     <main class="container">
 
-      <div class="grid">
+      <div>
 
-        <form action="/myaccount/link" method="post">
-          <input type="hidden" name="provider" value="accounts.google.com">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <button type="submit" class="contrast">Connect to Google</button>
-        </form>
+<% if (typeof facebookAccount != 'undefined') { %>
+        <div>
+          <form action="/myaccount/delete" method="post">
+            <input type="hidden" name="provider" value="www.facebook.com">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="contrast">Disconnect Facebook</button>
+          </form>
+        </div>
+<% } else { %>
+        <div>
+          <form action="/myaccount/link" method="post">
+            <input type="hidden" name="provider" value="www.facebook.com">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="contrast">Connect Facebook</button>
+          </form>
+        </div>
+<% } %>
+  
+<% if (typeof googleAccount != 'undefined') { %>
+        <div>
+          <form action="/myaccount/delete" method="post">
+            <input type="hidden" name="provider" value="accounts.google.com">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="contrast">Disconnect Google</button>
+          </form>
+        </div>
+<% } else { %>
+        <div>
+          <form action="/myaccount/link" method="post">
+            <input type="hidden" name="provider" value="accounts.google.com">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="contrast">Connect to Google</button>
+          </form>
+        </div>
+<% } %>
 
         <!--<a href="/login/federated/accounts.google.com?action=link" role="button">Connect to Google</a><br/>-->
 
