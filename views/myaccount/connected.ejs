@@ -39,7 +39,7 @@ main .grid > * {
 <% if (typeof facebookAccount != 'undefined') { %>
         <div>
           <form action="/myaccount/delete" method="post">
-            <input type="hidden" name="provider" value="www.facebook.com">
+            <input type="hidden" name="id" value="<%= facebookAccount.id %>">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="contrast">Disconnect Facebook</button>
           </form>
@@ -57,7 +57,7 @@ main .grid > * {
 <% if (typeof googleAccount != 'undefined') { %>
         <div>
           <form action="/myaccount/delete" method="post">
-            <input type="hidden" name="provider" value="accounts.google.com">
+            <input type="hidden" name="id" value="<%= googleAccount.id %>">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button type="submit" class="contrast">Disconnect Google</button>
           </form>

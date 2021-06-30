@@ -19,11 +19,12 @@ router.get('/connected',
   csrf(),
   ensureLoggedIn(),
   function(req, res, next) {
-    db.all('SELECT * FROM federated_credentials WHERE user_id = ?', [ req.user.id ], function(err, rows) {
+    db.all('SELECT rowid as id, * FROM federated_credentials WHERE user_id = ?', [ req.user.id ], function(err, rows) {
       if (err) { return next(err); }
       
       rows.forEach(function(row) {
         var acct = {
+          id: row.id,
           provider: row.provider,
           subject: row.subject
         };
@@ -53,6 +54,17 @@ router.post('/link',
     };
     var strategy = idp.create(req.body.provider);
     passport.authenticate(strategy, { state: state })(req, res, next);
+  });
+
+  // TODO: Authorize this based on user_id
+router.post('/delete',
+  csrf(),
+  ensureLoggedIn(),
+  function(req, res, next) {
+    db.run('DELETE FROM federated_credentials WHERE rowid = ?', [ req.body.id ], function(err) {
+      if (err) { return next(err); }
+      return res.redirect('/myaccount/connected')
+    });
   });
 
 module.exports = router;
