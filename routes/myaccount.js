@@ -53,7 +53,8 @@ router.post('/link',
   ensureLoggedIn(),
   function(req, res, next) {
     var state = {
-      action: 'link'
+      action: 'link',
+      returnTo: '/myaccount/connected'
     };
     var strategy = idp.create(req.body.provider);
     passport.authenticate(strategy, { state: state })(req, res, next);
