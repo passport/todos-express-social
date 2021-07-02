@@ -2,7 +2,7 @@ var express = require('express');
 var csrf = require('csurf');
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var passport = require('passport');
-var idp = require('../lib/idp');
+var idp = require('../idp');
 var db = require('../db');
 
 var router = express.Router();

@@ -1,6 +1,6 @@
 var express = require('express');
 var passport = require('passport');
-var idp = require('../lib/idp');
+var idp = require('../idp');
 var db = require('../db');
 
 
