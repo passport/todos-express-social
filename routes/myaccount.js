@@ -30,11 +30,14 @@ router.get('/connected',
         };
         
         switch (row.provider) {
+        case 'https://accounts.google.com':
+          res.locals.googleAccount = acct;
+          break;
         case 'https://www.facebook.com':
           res.locals.facebookAccount = acct;
           break;
-        case 'https://accounts.google.com':
-          res.locals.googleAccount = acct;
+        case 'https://twitter.com':
+          res.locals.twitterAccount = acct;
           break;
         }
       });

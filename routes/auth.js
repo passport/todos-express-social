@@ -109,7 +109,8 @@ router.get('/oauth/callback/:provider',
     var strategy = idp.create(req.params.provider);
     passport.authenticate(strategy, { assignProperty: 'federatedUser', failureRedirect: '/login' })(req, res, next);
   },
-  singleSignOn);
+  singleSignOn,
+  accountLink);
 
 router.get('/logout', function(req, res, next) {
   req.logout();

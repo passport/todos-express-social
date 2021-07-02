@@ -35,6 +35,24 @@ main .grid > * {
     <main class="container">
 
       <div>
+  
+<% if (typeof googleAccount != 'undefined') { %>
+        <div>
+          <form action="/myaccount/delete" method="post">
+            <input type="hidden" name="id" value="<%= googleAccount.id %>">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="contrast">Disconnect Google</button>
+          </form>
+        </div>
+<% } else { %>
+        <div>
+          <form action="/myaccount/link" method="post">
+            <input type="hidden" name="provider" value="accounts.google.com">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="contrast">Connect to Google</button>
+          </form>
+        </div>
+<% } %>
 
 <% if (typeof facebookAccount != 'undefined') { %>
         <div>
@@ -53,21 +71,21 @@ main .grid > * {
           </form>
         </div>
 <% } %>
-  
-<% if (typeof googleAccount != 'undefined') { %>
+
+<% if (typeof twitterAccount != 'undefined') { %>
         <div>
           <form action="/myaccount/delete" method="post">
-            <input type="hidden" name="id" value="<%= googleAccount.id %>">
+            <input type="hidden" name="id" value="<%= twitterAccount.id %>">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button type="submit" class="contrast">Disconnect Google</button>
+            <button type="submit" class="contrast">Disconnect Twitter</button>
           </form>
         </div>
 <% } else { %>
         <div>
           <form action="/myaccount/link" method="post">
-            <input type="hidden" name="provider" value="accounts.google.com">
+            <input type="hidden" name="provider" value="twitter.com">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button type="submit" class="contrast">Connect to Google</button>
+            <button type="submit" class="contrast">Connect Twitter</button>
           </form>
         </div>
 <% } %>
