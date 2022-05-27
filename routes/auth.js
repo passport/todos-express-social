@@ -3,7 +3,6 @@ var passport = require('passport');
 var GoogleStrategy = require('passport-google-oidc');
 var FacebookStrategy = require('passport-facebook');
 var TwitterStrategy = require('passport-twitter');
-var idp = require('../idp');
 var db = require('../db');
 
 
@@ -187,16 +186,6 @@ router.get('/oauth/callback/twitter', passport.authenticate('twitter', {
   successReturnToOrRedirect: '/',
   failureRedirect: '/login'
 }));
-
-/*
-router.get('/oauth/callback/:provider',
-  function(req, res, next) {
-    var strategy = idp.create(req.params.provider);
-    passport.authenticate(strategy, { assignProperty: 'federatedUser', failureRedirect: '/login' })(req, res, next);
-  },
-  singleSignOn,
-  accountLink);
-*/
 
 router.post('/logout', function(req, res, next) {
   req.logout(function(err) {
