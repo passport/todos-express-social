@@ -54,8 +54,8 @@ templates, and are styled using vanilla CSS.
 
 When a user first arrives at this app, they are prompted to sign in.  To sign
 in, the user is redirected to their choice of Google (using OpenID Connect),
-Facebook (using OAuth 2.0) or Twitter (using OAuth 1.0a).  Once authenticated, a
-login session is established and maintained between the server and the user's
+Facebook (using OAuth 2.0), or Twitter (using OAuth 1.0a).  Once authenticated,
+a login session is established and maintained between the server and the user's
 browser with a cookie.
 
 After signing in, the user can view, create, and edit todo items.  Interaction
