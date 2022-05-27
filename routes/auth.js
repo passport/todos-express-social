@@ -55,11 +55,9 @@ passport.use(new FacebookStrategy({
   clientID: process.env['FACEBOOK_CLIENT_ID'],
   clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
   callbackURL: '/oauth2/redirect/facebook',
-  store: true
+  state: true
 }, function verify(accessToken, refreshToken, profile, cb) {
-  console.log('FB CALLBACK!');
-  console.log(profile);
-  //return cb(null, profile);
+  return jitProvision('https://www.facebook.com', profile, cb);
 }));
 
 passport.use(new TwitterStrategy({
@@ -67,9 +65,7 @@ passport.use(new TwitterStrategy({
   consumerSecret: process.env['TWITTER_CONSUMER_SECRET'],
   callbackURL: '/oauth/callback/twitter'
 }, function verify(token, tokenSecret, profile, cb) {
-  console.log('TWITTER CALLBACK');
-  console.log(profile);
-  //return cb(null, profile);
+  return jitProvision('https://twitter.com', profile, cb);
 }));
 
 passport.serializeUser(function(user, cb) {
