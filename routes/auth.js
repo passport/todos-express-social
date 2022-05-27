@@ -1,6 +1,7 @@
 var express = require('express');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oidc');
+var TwitterStrategy = require('passport-twitter');
 var idp = require('../idp');
 var db = require('../db');
 
@@ -43,6 +44,17 @@ passport.use(new GoogleStrategy({
       });
     }
   });
+}));
+
+passport.use(new TwitterStrategy({
+  consumerKey: process.env['TWITTER_CONSUMER_KEY'],
+  consumerSecret: process.env['TWITTER_CONSUMER_SECRET'],
+  callbackURL: '/oauth/callback/twitter'
+},
+function(token, tokenSecret, profile, cb) {
+  console.log('TWITTER CALLBACK');
+  console.log(profile);
+  //return cb(null, profile);
 }));
 
 passport.serializeUser(function(user, cb) {
@@ -150,7 +162,15 @@ router.get('/oauth2/redirect/google', passport.authenticate('google', {
   successReturnToOrRedirect: '/',
   failureRedirect: '/login'
 }));
-  
+
+router.get('/login/federated/twitter', passport.authenticate('twitter'));
+
+router.get('/oauth/callback/twitter', passport.authenticate('twitter', {
+  successReturnToOrRedirect: '/',
+  failureRedirect: '/login'
+}));
+
+/*
 router.get('/oauth/callback/:provider',
   function(req, res, next) {
     var strategy = idp.create(req.params.provider);
@@ -158,6 +178,7 @@ router.get('/oauth/callback/:provider',
   },
   singleSignOn,
   accountLink);
+*/
 
 router.post('/logout', function(req, res, next) {
   req.logout(function(err) {
