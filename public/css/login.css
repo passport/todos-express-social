@@ -33,8 +33,20 @@ a.button {
 	color: white;
 }
 
+a.social {
+	margin-bottom: 6px;
+}
+
 a.google {
 	background: #4787ed;
+}
+
+a.facebook {
+	background: #4267b2;
+}
+
+a.twitter {
+	background: #1da1f2;
 }
 
 button:hover {
