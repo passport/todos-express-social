@@ -8,7 +8,6 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
-var myaccountRouter = require('./routes/myaccount');
 
 var app = express();
 
@@ -43,6 +42,5 @@ app.use(function(req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/', authRouter);
-app.use('/myaccount', myaccountRouter);
 
 module.exports = app;
