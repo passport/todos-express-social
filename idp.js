@@ -1,4 +1,3 @@
-var GoogleStrategy = require('passport-google-oauth20');
 var FacebookStrategy = require('passport-facebook');
 var TwitterStrategy = require('passport-twitter');
 
