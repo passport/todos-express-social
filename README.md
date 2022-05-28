@@ -41,8 +41,9 @@ Navigate to [`http://localhost:3000`](http://localhost:3000).
 
 This app illustrates how to build a todo app with sign in functionality using
 Express, Passport, and the [`passport-google-oidc`](https://www.passportjs.org/packages/passport-google-oidc/),
-[`passport-facebook`](https://www.passportjs.org/packages/passport-facebook/), and
-[`passport-twitter`](https://www.passportjs.org/packages/passport-twitter/) strategies.
+[`passport-facebook`](https://www.passportjs.org/packages/passport-facebook/),
+and [`passport-twitter`](https://www.passportjs.org/packages/passport-twitter/)
+strategies.
 
 This app is a traditional web application, in which application logic and data
 persistence resides on the server.  HTML pages and forms are rendered by the
@@ -66,6 +67,14 @@ these requests.
 When the server receives a request, it authenticates the cookie and restores the
 login session, thus authenticating the user.  It then accesses or stores records
 in the database associated with the authenticated user.
+
+## Next Steps
+
+* Extend with credential management.
+
+  Study [todos-express-social-credential-management](https://github.com/passport/todos-express-social-credential-management)
+  to learn how to use the [Credential Managment](https://www.w3.org/TR/credential-management-1/)
+  API to help the user store and select their preferred social network account.
 
 ## License
 
