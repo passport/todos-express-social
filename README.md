@@ -76,6 +76,11 @@ in the database associated with the authenticated user.
   to learn how to use the [Credential Managment](https://www.w3.org/TR/credential-management-1/)
   API to help the user store and select their preferred social network account.
 
+* Add passwordless.
+
+  Study [todos-express-webauthn](https://github.com/passport/todos-express-webauthn)
+  to learn how to let users sign in with biometrics or a security key.
+
 ## License
 
 [The Unlicense](https://opensource.org/licenses/unlicense)
